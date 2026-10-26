@@ -1,0 +1,62 @@
+; address   word      instruction (after pseudo-expansion)   | source line
+0x00400000  24100001  addiu $s0, $zero, 1                  | li    $s0, 1                  # i = 1
+0x00400004  24010064  addiu $at, $zero, 100                | bgt   $s0, 100, done          # while (i <= 100)
+0x00400008  0030082A  slt $at, $at, $s0                    | bgt   $s0, 100, done          # while (i <= 100)
+0x0040000C  14200028  bne $at, $zero, done                 | bgt   $s0, 100, done          # while (i <= 100)
+0x00400010  2401000F  addiu $at, $zero, 15                 | rem   $t0, $s0, 15
+0x00400014  0201001A  div $s0, $at                         | rem   $t0, $s0, 15
+0x00400018  00004010  mfhi $t0                             | rem   $t0, $s0, 15
+0x0040001C  1100000C  beq $t0, $zero, do_fizzbuzz          | beqz  $t0, do_fizzbuzz
+0x00400020  24010003  addiu $at, $zero, 3                  | rem   $t0, $s0, 3
+0x00400024  0201001A  div $s0, $at                         | rem   $t0, $s0, 3
+0x00400028  00004010  mfhi $t0                             | rem   $t0, $s0, 3
+0x0040002C  11000011  beq $t0, $zero, do_fizz              | beqz  $t0, do_fizz
+0x00400030  24010005  addiu $at, $zero, 5                  | rem   $t0, $s0, 5
+0x00400034  0201001A  div $s0, $at                         | rem   $t0, $s0, 5
+0x00400038  00004010  mfhi $t0                             | rem   $t0, $s0, 5
+0x0040003C  11000012  beq $t0, $zero, do_buzz              | beqz  $t0, do_buzz
+0x00400040  00102021  addu $a0, $zero, $s0                 | move  $a0, $s0                # print the number
+0x00400044  24020001  addiu $v0, $zero, 1                  | li    $v0, 1
+0x00400048  0000000C  syscall                              | syscall
+0x0040004C  08100026  j print_newline                      | j     print_newline
+0x00400050  3C041001  lui $a0, %hi(fizz)                   | la    $a0, fizz
+0x00400054  34840000  ori $a0, $a0, %lo(fizz)              | la    $a0, fizz
+0x00400058  24020004  addiu $v0, $zero, 4                  | li    $v0, 4
+0x0040005C  0000000C  syscall                              | syscall
+0x00400060  3C041001  lui $a0, %hi(buzz)                   | la    $a0, buzz
+0x00400064  34840005  ori $a0, $a0, %lo(buzz)              | la    $a0, buzz
+0x00400068  24020004  addiu $v0, $zero, 4                  | li    $v0, 4
+0x0040006C  0000000C  syscall                              | syscall
+0x00400070  08100026  j print_newline                      | j     print_newline
+0x00400074  3C041001  lui $a0, %hi(fizz)                   | la    $a0, fizz
+0x00400078  34840000  ori $a0, $a0, %lo(fizz)              | la    $a0, fizz
+0x0040007C  24020004  addiu $v0, $zero, 4                  | li    $v0, 4
+0x00400080  0000000C  syscall                              | syscall
+0x00400084  08100026  j print_newline                      | j     print_newline
+0x00400088  3C041001  lui $a0, %hi(buzz)                   | la    $a0, buzz
+0x0040008C  34840005  ori $a0, $a0, %lo(buzz)              | la    $a0, buzz
+0x00400090  24020004  addiu $v0, $zero, 4                  | li    $v0, 4
+0x00400094  0000000C  syscall                              | syscall
+0x00400098  3C041001  lui $a0, %hi(newline)                | la    $a0, newline
+0x0040009C  3484000A  ori $a0, $a0, %lo(newline)           | la    $a0, newline
+0x004000A0  24020004  addiu $v0, $zero, 4                  | li    $v0, 4
+0x004000A4  0000000C  syscall                              | syscall
+0x004000A8  22100001  addi $s0, $s0, 1                     | addi  $s0, $s0, 1             # i++
+0x004000AC  08100001  j loop                               | j     loop
+0x004000B0  2402000A  addiu $v0, $zero, 10                 | li    $v0, 10                 # exit
+0x004000B4  0000000C  syscall                              | syscall
+
+; data section
+0x10010000  46 69 7A 7A 00 42 75 7A 7A 00 0A 00
+
+; symbols
+0x00400000  main
+0x00400004  loop
+0x00400050  do_fizzbuzz
+0x00400074  do_fizz
+0x00400088  do_buzz
+0x00400098  print_newline
+0x004000B0  done
+0x10010000  fizz
+0x10010005  buzz
+0x1001000A  newline
